@@ -1,73 +1,135 @@
-# React + TypeScript + Vite
+# 🌱 Proyecto Dashboard Agrícola
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este proyecto es un **ecosistema agrícola digital** compuesto por un **frontend en React + Vite** y un **backend basado en microservicios asincrónicos y concurrentes**.  
 
-Currently, two official plugins are available:
+El objetivo es proveer a los usuarios de un **dashboard en vivo** con datos de sensores emulados (temperatura, humedad, lluvia y radiación solar), gestión de parcelas y reportes históricos.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## 🚀 Microservicios del Backend
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+1. **Servicio A – Autenticación**
+   - Registro/login de usuarios con JWT.
+   - Roles: `admin`, `usuario`.
 
-## Expanding the ESLint configuration
+2. **Servicio B – Sensores emulados**
+   - Genera datos dinámicos de:
+     - Temperatura
+     - Humedad
+     - Lluvia
+     - Radiación solar
+   - Capaz de producir >10,000 registros/minuto.
+   - Publica datos en un broker de mensajería (RabbitMQ/NATS/Kafka).
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+3. **Servicio C – Ingesta de datos**
+   - Consume datos de sensores en streaming.
+   - Deduplica y guarda en base de datos solo si hay cambios.
+   - Concurrente, preparado para múltiples flujos simultáneos.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+4. **Servicio D – Gestión de parcelas**
+   - CRUD de parcelas (ubicación, cultivo, responsable).
+   - Al eliminar, se registra en `deleted_parcels`.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+---
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 🎨 Frontend: React + Vite
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Módulos principales
+- **Dashboard en vivo** con datos actuales de sensores (WebSocket/HTTP).
+- **Histórico con gráficas**:
+  - Línea → temperatura
+  - Barras → humedad
+  - Pastel → distribución de cultivos
+- **Mapa de parcelas vigentes** (Leaflet.js o Google Maps API).
+- **Listado de parcelas eliminadas**.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+---
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+## 📂 Arquitectura de carpetas (frontend)
+
+```bash
+/src
+│── /app/                   # Configuración global
+│   ├── providers/           # Providers (Auth, QueryClient, Theme)
+│   ├── router/              # Configuración de rutas + guards
+│   ├── store/               # Estado global (Zustand/Redux)
+│   └── App.tsx
+│
+│── /shared/                 # Código genérico, agnóstico al dominio
+│   ├── ui/                  # Componentes atómicos (Button, Card, Input)
+│   ├── lib/                 # Axios, WebSocket client, etc.
+│   ├── hooks/               # Custom hooks reutilizables
+│   ├── utils/               # Funciones helpers (formatDate, etc.)
+│   ├── types/               # Tipos globales TS
+│   └── constants/           # Constantes globales
+│
+│── /entities/               # Entidades del dominio
+│   ├── user/                # User (tipos, mappers, validadores)
+│   ├── parcel/              # Parcel (interfaces, lógica mínima)
+│   └── sensor/              # Sensor (modelos, validadores)
+│
+│── /features/               # Casos de uso específicos
+│   ├── auth/                # Login, registro, refresh de sesión
+│   │   ├── api/             # Servicios API
+│   │   ├── model/           # Estado local / store
+│   │   ├── ui/              # Componentes de UI (LoginForm, etc.)
+│   │   └── index.ts
+│   ├── manage-parcels/      # CRUD de parcelas
+│   ├── live-sensors/        # Dashboard en vivo
+│   └── historical-data/     # Gráficas históricas
+│
+│── /widgets/                # Composición de features en bloques de UI
+│   ├── parcels-map/         # Mapa de parcelas vigentes
+│   ├── deleted-parcels/     # Listado de parcelas eliminadas
+│   ├── sensors-dashboard/   # Panel en vivo con sensores
+│   └── charts/              # Gráficas (línea, barras, pastel)
+│
+│── /pages/                  # Páginas principales (ensamblan widgets/features)
+│   ├── LoginPage/           # Login
+│   ├── DashboardPage/       # Dashboard principal
+│   └── ParcelsPage/         # CRUD de parcelas
+│
+│── main.tsx                 # Punto de entrada
+│── vite-env.d.ts
+
+
+---
+
+## ▶️ Cómo iniciar el proyecto
+
+### 1. Clonar repositorio
+```bash
+git clone https://github.com/<usuario>/<repo>.git
+cd <repo>
+2. Instalar dependencias
+bash
+Copiar código
+cd frontend
+npm install
+3. Variables de entorno
+Crear un archivo .env en la carpeta frontend/ con:
+
+env
+Copiar código
+VITE_API_URL=http://localhost:3000/api
+VITE_WS_URL=ws://localhost:3000/ws
+4. Levantar en modo desarrollo
+bash
+Copiar código
+npm run dev
+La app estará disponible en:
+👉 http://localhost:5173
+
+5. Build para producción
+bash
+Copiar código
+npm run build
+npm run preview
+🤝 Colaboración en equipo
+Convención de ramas
+main → estable
+
+dev → integración
+
+feature/<nombre> → nuevas funcionalidades
+
