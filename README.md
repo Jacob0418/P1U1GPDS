@@ -45,6 +45,40 @@ El objetivo es proveer a los usuarios de un **dashboard en vivo** con datos de s
 
 ---
 
+## ▶️ Cómo iniciar el proyecto
+
+### 1. Clonar repositorio
+[git clone https://github.com/<usuario>/<repo>.git](https://github.com/RicardojCh10/P1U1GPDS.git)
+
+### 2. Instalar dependencias
+
+``` bash
+- cd SGMP
+- npm install
+```
+
+3. Levantar en modo desarrollo
+```bash
+npm run dev
+```
+La app estará disponible en:
+👉 http://localhost:5173
+
+5. Build para producción
+````bash
+npm run build
+npm run preview
+````
+
+### 🤝 Colaboración en equipo
+
+- **Convención de ramas**
+- main → estable
+- dev → integración
+- feature/<nombre> → nuevas funcionalidades
+
+---
+
 ## 📂 Arquitectura de carpetas (frontend)
 
 ```bash
@@ -91,45 +125,4 @@ El objetivo es proveer a los usuarios de un **dashboard en vivo** con datos de s
 │
 │── main.tsx                 # Punto de entrada
 │── vite-env.d.ts
-
-
----
-
-## ▶️ Cómo iniciar el proyecto
-
-### 1. Clonar repositorio
-```bash
-git clone https://github.com/<usuario>/<repo>.git
-cd <repo>
-2. Instalar dependencias
-bash
-Copiar código
-cd frontend
-npm install
-3. Variables de entorno
-Crear un archivo .env en la carpeta frontend/ con:
-
-env
-Copiar código
-VITE_API_URL=http://localhost:3000/api
-VITE_WS_URL=ws://localhost:3000/ws
-4. Levantar en modo desarrollo
-bash
-Copiar código
-npm run dev
-La app estará disponible en:
-👉 http://localhost:5173
-
-5. Build para producción
-bash
-Copiar código
-npm run build
-npm run preview
-🤝 Colaboración en equipo
-Convención de ramas
-main → estable
-
-dev → integración
-
-feature/<nombre> → nuevas funcionalidades
 
