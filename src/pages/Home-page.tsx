@@ -15,6 +15,7 @@ import {
   Play,
   Monitor
 } from 'lucide-react';
+import { NavLink } from "react-router-dom";
 
 const HomePage = () => {
   const [currentSensorData, setCurrentSensorData] = useState({
@@ -106,7 +107,7 @@ const HomePage = () => {
             <nav className="hidden md:flex space-x-8">
               <a href="#features" className="text-gray-700 hover:text-emerald-600 transition-colors">Características</a>
               <a href="#architecture" className="text-gray-700 hover:text-emerald-600 transition-colors">Arquitectura</a>
-              <a href="#dashboard" className="text-gray-700 hover:text-emerald-600 transition-colors">Dashboard</a>
+              <NavLink to="/dashboard" className="text-gray-700 hover:text-emerald-600 transition-colors">Dashboard</NavLink>
               <button className="bg-emerald-600 text-white px-6 py-2 rounded-lg hover:bg-emerald-700 transition-all transform hover:scale-105">
                 Ingresar
               </button>
