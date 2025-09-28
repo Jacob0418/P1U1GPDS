@@ -36,7 +36,7 @@ const SidebarComponent = ({ open, onClose }: SidebarProps) => {
                     </button>
                 </div>
                 <nav className="mt-6 flex flex-col space-y-2 px-6">
-                    <NavLink to="/dashboard/crud" className="flex items-center px-3 py-2 rounded-lg text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition-colors">
+                    <NavLink to="/parcels" className="flex items-center px-3 py-2 rounded-lg text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition-colors">
                         <List className="w-5 h-5 mr-2" /> CRUD de Parcelas
                     </NavLink>
                     <NavLink to="/dashboard/eliminadas" className="flex items-center px-3 py-2 rounded-lg text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition-colors">
@@ -68,7 +68,7 @@ const SidebarComponent = ({ open, onClose }: SidebarProps) => {
                     <NavLink to="/dashboard" className="flex items-center px-3 py-2 rounded-lg text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition-colors">
                         <BarChart3 className="w-5 h-5 mr-2" /> Dashboard
                     </NavLink>
-                    <NavLink to="/dashboard/crud" className="flex items-center px-3 py-2 rounded-lg text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition-colors">
+                    <NavLink to="/parcels" className="flex items-center px-3 py-2 rounded-lg text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition-colors">
                         <List className="w-5 h-5 mr-2" /> CRUD de Parcelas
                     </NavLink>
                     <NavLink to="/dashboard/eliminadas" className="flex items-center px-3 py-2 rounded-lg text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition-colors">
