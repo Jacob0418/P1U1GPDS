@@ -9,11 +9,24 @@ import {
     LineChart,
     PieChart,
     Menu,
+    LogOut,
 } from "lucide-react";
 import SidebarComponent from "../widgets/sidebar/sidebar";
+import { useAuth } from "../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const DashboardParcels = () => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
+    const { signOut, user } = useAuth();
+    const navigate = useNavigate();
+    const handleLogout = async () => {
+        try {
+            await signOut();
+            navigate('/');
+        } catch (error) {
+            console.error('Error al cerrar sesión:', error);
+        }
+    };
 
     const parcels = [
         {
@@ -64,10 +77,22 @@ const DashboardParcels = () => {
                     Gestión de Parcelas
                 </h1>
                 </div>
-                <button className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-6 py-2 rounded-lg hover:from-emerald-700 hover:to-teal-700 transition-all flex items-center cursor-pointer">
-                <Plus className="w-5 h-5 mr-2" />
-                Nueva Parcela
-                </button>
+                <div className="flex items-center space-x-4">
+                            <span className="text-sm text-gray-600">
+                                {user?.email}
+                            </span>
+                            <button 
+                                onClick={handleLogout}
+                                className="bg-blue-900 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all flex items-center"
+                            >
+                                <LogOut className="w-4 h-4 mr-2" />
+                                Salir
+                            </button>
+                            <button className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-6 py-2 rounded-lg hover:from-emerald-700 hover:to-teal-700 transition-all flex items-center cursor-pointer">
+                                <Plus className="w-5 h-5 mr-2" />
+                                Nueva Parcela
+                            </button>
+                        </div>
             </div>
             </header>
 

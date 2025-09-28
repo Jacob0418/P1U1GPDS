@@ -13,11 +13,30 @@ import {
   Zap,
   ChevronRight,
   Play,
-  Monitor
+  Monitor,
+  User,
+  LogOut
 } from 'lucide-react';
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+import { useAuth } from '../contexts/AuthContext';
 
 const HomePage = () => {
+const navigate = useNavigate();
+const { user, signOut } = useAuth();
+
+const handleLoginClick = () => {
+    navigate('/login');
+  };
+
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      // El usuario se quedará en la página de inicio
+    } catch (error) {
+      console.error('Error al cerrar sesión:', error);
+    }
+  };
+
   const [currentSensorData, setCurrentSensorData] = useState({
     temperature: 24.5,
     humidity: 65,
@@ -108,9 +127,31 @@ const HomePage = () => {
               <a href="#features" className="text-gray-700 hover:text-emerald-600 transition-colors">Características</a>
               <a href="#architecture" className="text-gray-700 hover:text-emerald-600 transition-colors">Arquitectura</a>
               <NavLink to="/dashboard" className="text-gray-700 hover:text-emerald-600 transition-colors">Dashboard</NavLink>
-              <button className="bg-emerald-600 text-white px-6 py-2 rounded-lg hover:bg-emerald-700 transition-all transform hover:scale-105">
-                Ingresar
-              </button>
+              {/* Mostrar diferentes elementos según el estado de autenticación */}
+              {user ? (
+                // Usuario autenticado - mostrar email y botón de logout
+                <div className="flex items-center space-x-4">
+                  <div className="flex items-center space-x-2 text-gray-700">
+                    <User className="w-4 h-4" />
+                    <span className="text-sm">{user.email}</span>
+                  </div>
+                  <button 
+                    onClick={handleLogout}
+                    className="bg-blue-900 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-all transform hover:scale-105 flex items-center"
+                  >
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Salir
+                  </button>
+                </div>
+              ) : (
+                // Usuario no autenticado - mostrar botón de login
+                <button 
+                  onClick={handleLoginClick} 
+                  className="bg-emerald-600 text-white px-6 py-2 rounded-lg hover:bg-emerald-700 transition-all transform hover:scale-105"
+                >
+                  Ingresar
+                </button>
+              )}
             </nav>
           </div>
         </div>
