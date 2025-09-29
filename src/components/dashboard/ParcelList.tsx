@@ -6,7 +6,7 @@ const ParcelList = ({ parcels, onDelete } : { parcels: Parcel[], onDelete: (id: 
         {parcels.map((parcel) => (
             <li
                 key={parcel.id}
-                className="py-4 flex items-center justify-between">
+                className="py-4 flex items-center justify-between ">
                 <div>
                     <div className="font-semibold text-gray-800">
                         {parcel.name}
