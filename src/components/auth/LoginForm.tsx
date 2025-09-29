@@ -108,7 +108,7 @@ const LoginForm: React.FC = () => {
                         <button
                             type="button"
                             onClick={() => setShowPassword(!showPassword)}
-                            className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                            className="absolute inset-y-0 right-0 pr-3 flex items-center cursor-pointer"
                             disabled={loading}
                         >
                             {showPassword ? (
@@ -124,7 +124,7 @@ const LoginForm: React.FC = () => {
                 <button
                     type="submit"
                     disabled={loading}
-                    className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-3 px-4 rounded-lg hover:from-emerald-700 hover:to-teal-700 focus:ring-4 focus:ring-emerald-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center"
+                    className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-3 px-4 rounded-lg hover:from-emerald-700 hover:to-teal-700 focus:ring-4 focus:ring-emerald-200 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center cursor-pointer"
                 >
                     <LogIn className="w-5 h-5 mr-2" />
                     {loading ? 'Ingresando...' : 'Iniciar Sesión'}
