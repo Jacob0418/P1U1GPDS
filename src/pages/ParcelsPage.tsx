@@ -181,7 +181,7 @@ const ParcelsPage: React.FC = () => {
               </div>
               <button
                 onClick={() => setShowCreateModal(true)}
-                className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-6 py-2 rounded-lg hover:from-emerald-700 hover:to-teal-700 transition-all flex items-center"
+                className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-6 py-2 rounded-lg hover:from-emerald-700 hover:to-teal-700 transition-all flex items-center cursor-pointer"
               >
                 <Plus className="w-5 h-5 mr-2" />
                 Nueva Parcela
@@ -255,13 +255,13 @@ const ParcelsPage: React.FC = () => {
                     <div className="flex space-x-2">
                       <button
                         onClick={() => openEditModal(parcel)}
-                        className="text-blue-500 hover:text-blue-700 p-1 rounded transition-colors"
+                        className="text-blue-500 hover:text-blue-700 p-1 rounded transition-colors cursor-pointer"
                       >
                         <Edit className="w-4 h-4" />
                       </button>
                       <button
                         onClick={() => handleDeleteParcel(parcel.id)}
-                        className="text-red-500 hover:text-red-700 p-1 rounded transition-colors"
+                        className="text-red-500 hover:text-red-700 p-1 rounded transition-colors cursor-pointer"
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -360,13 +360,13 @@ const ParcelsPage: React.FC = () => {
                       setShowCreateModal(false)
                       setFormData({ name: '', latitude: '', longitude: '', crop: '' })
                     }}
-                    className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                    className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
                   >
                     Cancelar
                   </button>
                   <button
                     type="submit"
-                    className="flex-1 px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-lg hover:from-emerald-700 hover:to-teal-700 transition-all"
+                    className="flex-1 px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-lg hover:from-emerald-700 hover:to-teal-700 transition-all cursor-pointer"
                   >
                     Crear Parcela
                   </button>
@@ -441,13 +441,13 @@ const ParcelsPage: React.FC = () => {
                       setSelectedParcel(null)
                       setFormData({ name: '', latitude: '', longitude: '', crop: '' })
                     }}
-                    className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                    className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors cursor-pointer"
                   >
                     Cancelar
                   </button>
                   <button
                     type="submit"
-                    className="flex-1 px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg hover:from-blue-700 hover:to-indigo-700 transition-all"
+                    className="flex-1 px-4 py-2 bg-gradient-to-r from-emerald-600 to-teal-600 text-white rounded-lg hover:from-emerald-700 hover:to-teal-700 transition-all cursor-pointer"
                   >
                     Actualizar
                   </button>

@@ -15,6 +15,13 @@ interface SidebarProps {
     onClose: () => void;
 }
 
+const navLinkClass = ({ isActive }: { isActive: boolean }) =>
+    `flex items-center px-3 py-2 rounded-lg transition-colors font-medium ${
+        isActive
+            ? "bg-emerald-100 text-emerald-700 font-bold"
+            : "text-gray-700 hover:bg-emerald-50 hover:text-emerald-700"
+    }`;
+
 const SidebarComponent = ({ open, onClose }: SidebarProps) => {
     return (
         <>
@@ -36,25 +43,25 @@ const SidebarComponent = ({ open, onClose }: SidebarProps) => {
                     </button>
                 </div>
                 <nav className="mt-6 flex flex-col space-y-2 px-6">
-                    <NavLink to="/parcels" className="flex items-center px-3 py-2 rounded-lg text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition-colors">
+                    <NavLink to="/parcels" className={navLinkClass}>
                         <List className="w-5 h-5 mr-2" /> CRUD de Parcelas
                     </NavLink>
-                    <NavLink to="/dashboard/eliminadas" className="flex items-center px-3 py-2 rounded-lg text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition-colors">
+                    <NavLink to="/dashboard/eliminadas" className={navLinkClass}>
                         <Trash2 className="w-5 h-5 mr-2" /> Parcelas Eliminadas
                     </NavLink>
-                    <NavLink to="/dashboard/sensores" className="flex items-center px-3 py-2 rounded-lg text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition-colors">
+                    <NavLink to="/dashboard/sensores" className={navLinkClass}>
                         <BarChart3 className="w-5 h-5 mr-2" /> Dashboard en Vivo
                     </NavLink>
-                    <NavLink to="/dashboard/historico" className="flex items-center px-3 py-2 rounded-lg text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition-colors">
+                    <NavLink to="/dashboard/historico" className={navLinkClass}>
                         <LineChart className="w-5 h-5 mr-2" /> Histórico Temperatura
                     </NavLink>
-                    <NavLink to="/dashboard/humedad" className="flex items-center px-3 py-2 rounded-lg text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition-colors">
+                    <NavLink to="/dashboard/humedad" className={navLinkClass}>
                         <BarChart3 className="w-5 h-5 mr-2" /> Histórico Humedad
                     </NavLink>
-                    <NavLink to="/dashboard/cultivos" className="flex items-center px-3 py-2 rounded-lg text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition-colors">
+                    <NavLink to="/dashboard/cultivos" className={navLinkClass}>
                         <PieChart className="w-5 h-5 mr-2" /> Distribución de Cultivos
                     </NavLink>
-                    <NavLink to="/dashboard/mapa" className="flex items-center px-3 py-2 rounded-lg text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition-colors">
+                    <NavLink to="/dashboard/mapa" className={navLinkClass}>
                         <MapPin className="w-5 h-5 mr-2" /> Mapa de Parcelas
                     </NavLink>
                 </nav>
@@ -65,28 +72,28 @@ const SidebarComponent = ({ open, onClose }: SidebarProps) => {
                     <span className="font-bold text-gray-900">Sistema Integral Agrícola</span>
                 </div>
                 <nav className="mt-6 flex flex-col space-y-2 px-6">
-                    <NavLink to="/dashboard" className="flex items-center px-3 py-2 rounded-lg text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition-colors">
+                    <NavLink to="/dashboard" className={navLinkClass}>
                         <BarChart3 className="w-5 h-5 mr-2" /> Dashboard
                     </NavLink>
-                    <NavLink to="/parcels" className="flex items-center px-3 py-2 rounded-lg text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition-colors">
+                    <NavLink to="/parcels" className={navLinkClass}>
                         <List className="w-5 h-5 mr-2" /> CRUD de Parcelas
                     </NavLink>
-                    <NavLink to="/deletedParcels" className="flex items-center px-3 py-2 rounded-lg text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition-colors">
+                    <NavLink to="/deletedParcels" className={navLinkClass}>
                         <Trash2 className="w-5 h-5 mr-2" /> Parcelas Eliminadas
                     </NavLink>
-                    {/* <NavLink to="/dashboard/sensores" className="flex items-center px-3 py-2 rounded-lg text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition-colors">
+                    {/* <NavLink to="/dashboard/sensores" className={navLinkClass}>
                         <BarChart3 className="w-5 h-5 mr-2" /> Dashboard en Vivo
                     </NavLink> */}
-                    <NavLink to="/dashboard/historico" className="flex items-center px-3 py-2 rounded-lg text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition-colors">
+                    <NavLink to="/dashboard/historico" className={navLinkClass}>
                         <LineChart className="w-5 h-5 mr-2" /> Histórico Temperatura
                     </NavLink>
-                    <NavLink to="/dashboard/humedad" className="flex items-center px-3 py-2 rounded-lg text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition-colors">
+                    <NavLink to="/dashboard/humedad" className={navLinkClass}>
                         <BarChart3 className="w-5 h-5 mr-2" /> Histórico Humedad
                     </NavLink>
-                    <NavLink to="/dashboard/cultivos" className="flex items-center px-3 py-2 rounded-lg text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition-colors">
+                    <NavLink to="/dashboard/cultivos" className={navLinkClass}>
                         <PieChart className="w-5 h-5 mr-2" /> Distribución de Cultivos
                     </NavLink>
-                    <NavLink to="/dashboard/mapa" className="flex items-center px-3 py-2 rounded-lg text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition-colors">
+                    <NavLink to="/dashboard/mapa" className={navLinkClass}>
                         <MapPin className="w-5 h-5 mr-2" /> Mapa de Parcelas
                     </NavLink>
                 </nav>
