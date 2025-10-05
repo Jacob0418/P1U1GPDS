@@ -1,0 +1,1 @@
+export const formatTemperature = (temp: number): string => `${temp.toFixed(1)}°C`;
