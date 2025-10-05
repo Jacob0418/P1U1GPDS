@@ -40,7 +40,8 @@ jobs:
 
       - name: Build and push Docker image
         run: |
+          REPO_NAME=$(echo ${{ github.repository }} | tr '[:upper:]' '[:lower:]')
           TAG=${GITHUB_SHA::7}
-          docker build -t $IMAGE_NAME:$TAG -t $IMAGE_NAME:latest .
-          docker push $IMAGE_NAME:$TAG
-          docker push $IMAGE_NAME:latest
+          docker build -t ghcr.io/$REPO_NAME/dashboard-app:$TAG -t ghcr.io/$REPO_NAME/dashboard-app:latest .
+          docker push ghcr.io/$REPO_NAME/dashboard-app:$TAG
+          docker push ghcr.io/$REPO_NAME/dashboard-app:latest
