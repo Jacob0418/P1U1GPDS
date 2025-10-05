@@ -1,8 +1,8 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import LoginForm from '../components/auth/LoginForm'
+import RegisterForm from '../components/auth/RegisterForm'
 
-const AuthPage: React.FC = () => {
+const RegisterPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 flex items-center justify-center p-4">
       {/* Background decoration */}
@@ -11,14 +11,14 @@ const AuthPage: React.FC = () => {
         <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-teal-300 rounded-full mix-blend-multiply filter blur-xl opacity-20"></div>
       </div>
 
-      {/* Auth Form */}
+      {/* Register Form */}
       <div className="relative z-10 w-full max-w-lg">
-        <LoginForm />
+        <RegisterForm />
 
         <div className="mt-6 text-center text-sm text-gray-600">
-          ¿No tienes cuenta?{' '}
-          <Link to="/register" className="text-emerald-600 hover:text-emerald-700 font-medium">
-            Regístrate
+          ¿Ya tienes cuenta?{' '}
+          <Link to="/login" className="text-emerald-600 hover:text-emerald-700 font-medium">
+            Inicia sesión
           </Link>
         </div>
       </div>
@@ -26,4 +26,4 @@ const AuthPage: React.FC = () => {
   )
 }
 
-export default AuthPage
+export default RegisterPage

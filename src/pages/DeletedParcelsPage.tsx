@@ -172,9 +172,22 @@ const DeletedParcelsPage: React.FC = () => {
               <h3 className="text-xl font-semibold text-gray-600 mb-2">
                 {searchTerm ? 'No se encontraron parcelas' : 'No hay parcelas eliminadas'}
               </h3>
-              <p className="text-gray-500">
+              <p className="text-gray-500 mb-4">
                 {searchTerm ? 'Intenta con otros términos de búsqueda' : 'Las parcelas eliminadas aparecerán aquí'}
               </p>
+              {!searchTerm && (
+                <div className="mt-6 p-6 bg-orange-50 border-2 border-orange-300 rounded-xl max-w-2xl mx-auto">
+                  <div className="flex items-center justify-center mb-3">
+                    <AlertCircle className="w-8 h-8 text-orange-600" />
+                  </div>
+                  <p className="text-lg font-semibold text-orange-900 mb-2">
+                    ¿Necesitas recuperar parcelas eliminadas?
+                  </p>
+                  <p className="text-orange-700 text-base">
+                    Para recuperar parcelas eliminadas, contacte con el administrador
+                  </p>
+                </div>
+              )}
             </div>
           ) : (
             <div className="space-y-4">
