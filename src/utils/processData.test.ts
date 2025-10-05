@@ -1,4 +1,5 @@
 import { calculateAverage } from './processData';
+import { describe, it, expect } from 'vitest';
 
 describe('calculateAverage', () => {
   it('calculates the average of an array of numbers', () => {

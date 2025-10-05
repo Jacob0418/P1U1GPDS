@@ -1,6 +1,6 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import SidebarComponent from './sidebar';
-import { vi } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 
 describe('SidebarComponent', () => {
   it('renders the sidebar when open', () => {

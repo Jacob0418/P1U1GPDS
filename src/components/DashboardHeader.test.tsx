@@ -1,5 +1,6 @@
 import { render, screen } from '@testing-library/react';
 import DashboardHeader from './dashboard/DashboardHeader';
+import { describe, it, expect } from 'vitest';
 
 describe('DashboardHeader', () => {
   it('renders the header with the user email', () => {
