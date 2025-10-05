@@ -1,4 +1,4 @@
-name: React CI/CD with Docker
+name: SIG CI/CD with Docker
 
 on:
   push:
@@ -28,7 +28,7 @@ jobs:
   docker-build:
     needs: build-and-test
     runs-on: ubuntu-latest
-    permissions: # Agrega permisos explícitos
+    permissions:
       contents: read
       packages: write
     steps:
@@ -48,3 +48,10 @@ jobs:
           docker build -t ghcr.io/$REPO_NAME/dashboard-app:$TAG -t ghcr.io/$REPO_NAME/dashboard-app:latest .
           docker push ghcr.io/$REPO_NAME/dashboard-app:$TAG
           docker push ghcr.io/$REPO_NAME/dashboard-app:latest
+
+      - name: Trigger Render Deploy
+        run: |
+          curl -X POST -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
+          -H "Content-Type: application/json" \
+          -d '{"serviceId": "<YOUR_RENDER_SERVICE_ID>"}' \
+          https://api.render.com/v1/services/<YOUR_RENDER_SERVICE_ID>/deploys
