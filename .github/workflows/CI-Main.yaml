@@ -28,6 +28,9 @@ jobs:
   docker-build:
     needs: build-and-test
     runs-on: ubuntu-latest
+    permissions: # Agrega permisos explícitos
+      contents: read
+      packages: write
     steps:
       - uses: actions/checkout@v4
 
