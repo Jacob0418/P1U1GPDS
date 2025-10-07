@@ -65,6 +65,13 @@ jobs:
     needs: kubernetes-deploy
     runs-on: ubuntu-latest
     steps:
+      - name: Restore Deployment Target
+        id: restore_target
+        uses: actions/download-artifact@v3
+        with:
+          name: deploy-target
+        continue-on-error: true
+
       - name: Determine Deployment Target Blue/Green
         id: deploy_target
         run: |
@@ -83,6 +90,12 @@ jobs:
             echo "service_id=srv-d3i8cdc9c44c73aikc40" >> $GITHUB_ENV
             echo "blue" > .deploy_target # Actualiza el archivo para el próximo despliegue
           fi
+
+      - name: Save Deployment Target
+        uses: actions/upload-artifact@v3
+        with:
+          name: deploy-target
+          path: .deploy_target
 
       - name: Trigger Render Deploy
         run: |
