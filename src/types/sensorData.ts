@@ -7,4 +7,5 @@ export interface SensorData {
 export interface PieChartData {
     crop: string;
     value: number;
+    [key: string]: string | number;
 }
