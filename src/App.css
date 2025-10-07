@@ -1,2 +1,8 @@
 @import "tailwindcss";
 
+.dashboard-bg {
+  background-image: url('/path/to/your/plantation-image.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed; /* Opcional, para un efecto parallax */
+}

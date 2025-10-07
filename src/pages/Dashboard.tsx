@@ -1,17 +1,22 @@
 import { useState, useEffect } from "react";
+import toast, { Toaster } from 'react-hot-toast';
 import {
     MapPin,
     Trash2,
     Leaf,
     BarChart3,
-    LineChart as LucideLineChart,
-    PieChart as LucidePieChart,
+    TrendingUp,
+    PieChart,
+    AlertCircle,
 } from "lucide-react";
-import SidebarComponent from "../widgets/sidebar/sidebar";
+
+// Servicios y Hooks  
 import { useAuth } from "../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { ParcelService } from "../service/parcelService";
-import type { Parcel } from "../types/parcel";
+
+// Componentes
+import SidebarComponent from "../widgets/sidebar/sidebar";
 import DashboardHeader from "../components/dashboard/DashboardHeader";
 import ParcelList from "../components/dashboard/ParcelList";
 import DeletedParcelList from "../components/dashboard/DeletedParcelList";
@@ -19,58 +24,19 @@ import LineChartReal from "../components/dashboard/LineChartReal";
 import BarChartReal from "../components/dashboard/BarChartReal";
 import PieChartReal from "../components/dashboard/PieChartReal";
 import MapDemo from "../components/dashboard/MapDemo";
-import type { PieChartData, SensorData } from "../types/sensorData";
+import Card from "../components/dashboard/card";
+import LiveSensors from "../components/dashboard/LiveSensors";
 
-const temperaturaData: SensorData[] = [
-    { timestamp: "2025-09-29T01:00:00", value: 28.5 },
-    { timestamp: "2025-09-29T02:00:00", value: 31.97 },
-    { timestamp: "2025-09-29T03:00:00", value: 38.87 },
-    { timestamp: "2025-09-29T04:00:00", value: 37.98 },
-];
-
-const humedadData: SensorData[] = [
-    { timestamp: "2025-09-29T01:00:00", value: 55.2 },
-    { timestamp: "2025-09-29T02:00:00", value: 77.69 },
-    { timestamp: "2025-09-29T03:00:00", value: 25.44 },
-    { timestamp: "2025-09-29T04:00:00", value: 62.17 },
-];
-
-const cultivosDistribucion: PieChartData[] = [
-    { crop: "Maíz", value: 40 },
-    { crop: "Trigo", value: 25 },
-    { crop: "Sorgo", value: 20 },
-    { crop: "Soja", value: 15 },
-];
+import type { Parcel } from "../types/parcel";
+import { temperaturaData, humedadData, cultivosDistribucion } from "../types/mockData";
 
 const DashboardParcels = () => {
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [parcels, setParcels] = useState<Parcel[]>([]);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string>('');
-    const [success, setSuccess] = useState<string>('');
+    const [error, setError] = useState<string | null>(null);
     const { signOut, user } = useAuth();
     const navigate = useNavigate();
-
-    const handleDeleteParcel = async (id: string) => {
-        if (!confirm('¿Estás seguro de que deseas eliminar esta parcela?')) return;
-        const { error } = await ParcelService.deleteParcel(id);
-        if (error) {
-            setError('Error al eliminar la parcela');
-            console.error(error);
-        } else {
-            setSuccess('Parcela eliminada exitosamente');
-            loadParcels();
-        }
-    };
-
-    const handleLogout = async () => {
-        try {
-            await signOut();
-            navigate('/');
-        } catch (error) {
-            console.error('Error al cerrar sesión:', error);
-        }
-    };
 
     const deletedParcels = [
         {
@@ -89,18 +55,75 @@ const DashboardParcels = () => {
 
     const loadParcels = async () => {
         setLoading(true);
-        const { data, error } = await ParcelService.getAllParcels();
-        if (error) {
-            setError('Error al cargar las parcelas');
-            console.error(error);
-        } else {
-            setParcels((data || []).slice(0, 2));
+        setError(null);
+        try {
+            const { data, error: fetchError } = await ParcelService.getAllParcels();
+            if (fetchError) {
+                setError('Error al cargar las parcelas');
+                console.error(fetchError);
+                toast.error('No se pudieron cargar las parcelas');
+            } else {
+                setParcels((data || []).slice(0, 2));
+            }
+        } catch (err) {
+            setError('Error inesperado al cargar las parcelas');
+            console.error(err);
+            toast.error('Error inesperado');
+        } finally {
+            setLoading(false);
         }
-        setLoading(false);
+    };
+
+    const handleDeleteParcel = async (id: string) => {
+        const promise = ParcelService.deleteParcel(id);
+
+        toast.promise(promise, {
+            loading: 'Eliminando parcela...',
+            success: () => {
+                loadParcels();
+                return 'Parcela eliminada exitosamente';
+            },
+            error: 'Error al eliminar la parcela',
+        });
+    };
+
+    const handleLogout = async () => {
+        try {
+            await signOut();
+            navigate('/');
+        } catch (error) {
+            console.error('Error al cerrar sesión:', error);
+            toast.error('Error al cerrar sesión');
+        }
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-green-100 flex">
+        <div className="min-h-screen bg-gradient-to-br from-gray-50 via-gray-100 to-emerald-50 flex">
+            <Toaster 
+                position="top-right" 
+                toastOptions={{
+                    duration: 4000,
+                    style: { 
+                        background: '#1f2937', 
+                        color: '#fff',
+                        borderRadius: '0.75rem',
+                        padding: '1rem'
+                    },
+                    success: {
+                        iconTheme: {
+                            primary: '#10b981',
+                            secondary: '#fff',
+                        },
+                    },
+                    error: {
+                        iconTheme: {
+                            primary: '#ef4444',
+                            secondary: '#fff',
+                        },
+                    },
+                }} 
+            />
+            
             <SidebarComponent open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
             <div className="flex-1 lg:ml-64">
@@ -110,97 +133,95 @@ const DashboardParcels = () => {
                     onSidebarOpen={() => setSidebarOpen(true)}
                 />
 
-                <main className="max-w-7xl mx-auto px-4 py-10 grid grid-cols-1 lg:grid-cols-3 gap-8">
-                    <section className="lg:col-span-1 space-y-8">
-                        <div className="bg-white rounded-xl shadow-lg border border-emerald-200 p-6">
-                            <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
-                                <Leaf className="w-6 h-6 text-emerald-600 mr-2" />
-                                Parcelas Vigentes
-                            </h2>
-                            <ParcelList parcels={parcels} onDelete={handleDeleteParcel} />
+                <main className="max-w-[1600px] mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                    {/* Error State */}
+                    {error && (
+                        <div className="mb-6 bg-red-50 border border-red-200 rounded-xl p-4 flex items-start gap-3">
+                            <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0 mt-0.5" />
+                            <div>
+                                <h3 className="text-sm font-semibold text-red-900">Error al cargar datos</h3>
+                                <p className="text-sm text-red-700 mt-1">{error}</p>
+                            </div>
                         </div>
+                    )}
 
-                        <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
-                            <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
-                                <Trash2 className="w-6 h-6 text-red-500 mr-2" />
-                                Parcelas Eliminadas
-                            </h2>
-                            <DeletedParcelList deletedParcels={deletedParcels} />
-                        </div>
+                    {/* Sensores en Tiempo Real - Full Width */}
+                    <section className="mb-8">
+                        <LiveSensors />
                     </section>
 
-                    <section className="lg:col-span-2 space-y-8">
-                        <div className="bg-white rounded-xl shadow-lg border border-emerald-200 p-6 mb-8">
-                            <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
-                                <BarChart3 className="w-6 h-6 text-emerald-600 mr-2" />
-                                Sensores en Vivo
-                            </h2>
-                            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                                <div className="text-center p-4 bg-gradient-to-br from-red-50 to-orange-50 rounded-xl">
-                                    <LucideLineChart className="w-8 h-8 mx-auto text-red-500 mb-2" />
-                                    <div className="text-2xl font-bold text-red-600">25.2°C</div>
-                                    <div className="text-sm text-gray-600">Temperatura</div>
-                                </div>
-                                <div className="text-center p-4 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl">
-                                    <BarChart3 className="w-8 h-8 mx-auto text-blue-500 mb-2" />
-                                    <div className="text-2xl font-bold text-blue-600">68%</div>
-                                    <div className="text-sm text-gray-600">Humedad</div>
-                                </div>
-                                <div className="text-center p-4 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-xl">
-                                    <LucidePieChart className="w-8 h-8 mx-auto text-indigo-500 mb-2" />
-                                    <div className="text-2xl font-bold text-indigo-600">
-                                        Cultivos
+                    {/* Grid Principal */}
+                    <div className="grid grid-cols-1 xl:grid-cols-12 gap-6">
+                        {/* Columna Izquierda - Parcelas */}
+                        <aside className="xl:col-span-4 space-y-6">
+                            <Card 
+                                title="Parcelas Vigentes" 
+                                icon={<Leaf className="w-5 h-5 text-emerald-600" />}
+                            >
+                                {loading ? (
+                                    <div className="flex items-center justify-center py-12">
+                                        <div className="animate-spin rounded-full h-10 w-10 border-b-2 border-emerald-600"></div>
                                     </div>
-                                    <div className="text-sm text-gray-600">Distribución</div>
-                                </div>
-                                <div className="text-center p-4 bg-gradient-to-br from-green-50 to-teal-50 rounded-xl">
-                                    <MapPin className="w-8 h-8 mx-auto text-green-500 mb-2" />
-                                    <div className="text-2xl font-bold text-green-600">Mapa</div>
-                                    <div className="text-sm text-gray-600">Parcelas</div>
-                                </div>
-                            </div>
-                        </div>
+                                ) : (
+                                    <ParcelList parcels={parcels} onDelete={handleDeleteParcel} />
+                                )}
+                            </Card>
 
-                        <div className="grid md:grid-cols-3 gap-8">
-                            <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 min-h-[300px] flex flex-col justify-between">
-                                <h3 className="text-lg font-semibold text-gray-900 mb-2 flex items-center">
-                                    <LucideLineChart className="w-5 h-5 text-red-500 mr-2" />
-                                    Histórico Temperatura
-                                </h3>
-                                <div className="flex-1 flex items-center">
-                                    <LineChartReal data={temperaturaData} />
-                                </div>
-                            </div>
-                            <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 min-h-[300px] flex flex-col justify-between">
-                                <h3 className="text-lg font-semibold text-gray-900 mb-2 flex items-center">
-                                    <BarChart3 className="w-5 h-5 text-blue-500 mr-2" />
-                                    Histórico Humedad
-                                </h3>
-                                <div className="flex-1 flex items-center">
-                                    <BarChartReal data={humedadData} />
-                                </div>
-                            </div>
-                            <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 min-h-[300px] flex flex-col justify-between">
-                                <h3 className="text-lg font-semibold text-gray-900 mb-2 flex items-center">
-                                    <LucidePieChart className="w-5 h-5 text-indigo-500 mr-2" />
-                                    Distribución de Cultivos
-                                </h3>
-                                <div className="flex-1 flex items-center">
-                                    <PieChartReal data={cultivosDistribucion} />
-                                </div>
-                            </div>
-                        </div>
+                            <Card 
+                                title="Parcelas Eliminadas" 
+                                icon={<Trash2 className="w-5 h-5 text-red-500" />}
+                            >
+                                <DeletedParcelList deletedParcels={deletedParcels} />
+                            </Card>
+                        </aside>
 
-                        <div className="bg-white rounded-xl shadow-lg border border-emerald-200 p-6 min-h-[400px] flex flex-col justify-between">
-                            <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
-                                <MapPin className="w-6 h-6 text-green-600 mr-2" />
-                                Mapa de Parcelas Vigentes
-                            </h2>
-                            <div className="h-[350px]">
-                                <MapDemo />
+                        {/* Columna Derecha - Gráficas y Mapa */}
+                        <section className="xl:col-span-8 space-y-6">
+                            {/* Grid de Gráficas */}
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                <Card
+                                    title="Temperatura"
+                                    icon={<TrendingUp className="w-5 h-5 text-red-500" />}
+                                    className="h-[320px]"
+                                >
+                                    <div className="h-[240px] flex items-center justify-center">
+                                        <LineChartReal data={temperaturaData} />
+                                    </div>
+                                </Card>
+
+                                <Card
+                                    title="Humedad"
+                                    icon={<BarChart3 className="w-5 h-5 text-blue-500" />}
+                                    className="h-[320px]"
+                                >
+                                    <div className="h-[240px] flex items-center justify-center">
+                                        <BarChartReal data={humedadData} />
+                                    </div>
+                                </Card>
+
+                                <Card
+                                    title="Cultivos"
+                                    icon={<PieChart className="w-5 h-5 text-purple-500" />}
+                                    className="h-[320px]"
+                                >
+                                    <div className="h-[240px] flex items-center justify-center">
+                                        <PieChartReal data={cultivosDistribucion} />
+                                    </div>
+                                </Card>
                             </div>
-                        </div>
-                    </section>
+
+                            {/* Mapa - Full Width */}
+                            <Card
+                                title="Ubicación de Parcelas"
+                                icon={<MapPin className="w-5 h-5 text-emerald-600" />}
+                                className="h-[500px]"
+                            >
+                                <div className="h-[420px] rounded-lg overflow-hidden">
+                                    <MapDemo />
+                                </div>
+                            </Card>
+                        </section>
+                    </div>
                 </main>
             </div>
         </div>
