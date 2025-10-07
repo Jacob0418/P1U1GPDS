@@ -104,10 +104,13 @@ jobs:
           fi
 
       - name: Save Deployment Target
+        run: |
+          # Mueve el archivo al directorio actual si es necesario
+          mv .deploy_target $GITHUB_WORKSPACE/.deploy_target
         uses: actions/upload-artifact@v4
         with:
           name: deploy-target
-          path: .deploy_target
+          path: $GITHUB_WORKSPACE/.deploy_target
 
       - name: Trigger Render Deploy
         run: |
