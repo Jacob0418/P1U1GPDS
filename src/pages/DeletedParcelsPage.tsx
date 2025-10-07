@@ -11,18 +11,30 @@ import {
   Leaf
 } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
+import { useNavigate } from 'react-router-dom'
 import SidebarComponent from '../widgets/sidebar/sidebar'
+import DashboardHeader from '../components/dashboard/DashboardHeader'
 import { ParcelService } from '../service/parcelService'
 import type { Parcel } from '../types/parcel'
 
 const DeletedParcelsPage: React.FC = () => {
-  const { user } = useAuth()
+  const { user, signOut } = useAuth()
+  const navigate = useNavigate()
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [deletedParcels, setDeletedParcels] = useState<Parcel[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string>('')
   const [success, setSuccess] = useState<string>('')
   const [searchTerm, setSearchTerm] = useState('')
+
+  const handleLogout = async () => {
+    try {
+      await signOut()
+      navigate('/')
+    } catch (error) {
+      console.error('Error al cerrar sesión:', error)
+    }
+  }
 
   useEffect(() => {
     fetchDeleted()
@@ -109,8 +121,15 @@ const DeletedParcelsPage: React.FC = () => {
       <SidebarComponent open={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       <div className="flex-1 lg:ml-64">
-        {/* Header */}
-        <header className="bg-white/80 backdrop-blur-lg border-b border-red-200 sticky top-0 z-40">
+        {/* Header con botón de logout */}
+        <DashboardHeader
+          user={user}
+          onLogout={handleLogout}
+          onSidebarOpen={() => setSidebarOpen(true)}
+        />
+
+        {/* Header de la página */}
+        <header className="bg-white/80 backdrop-blur-lg border-b border-red-200 sticky top-16 z-30">
           <div className="max-w-7xl mx-auto px-4 py-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
