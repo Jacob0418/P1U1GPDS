@@ -103,10 +103,12 @@ jobs:
             exit 1
           fi
 
-      - name: Save Deployment Target
+      - name: Move Deployment Target (if necessary)
         run: |
           # Mueve el archivo al directorio actual si es necesario
           mv .deploy_target $GITHUB_WORKSPACE/.deploy_target
+
+      - name: Save Deployment Target
         uses: actions/upload-artifact@v4
         with:
           name: deploy-target
