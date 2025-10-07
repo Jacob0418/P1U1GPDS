@@ -370,20 +370,12 @@ const DashboardParcels = () => {
 
                 <main className="max-w-7xl mx-auto px-4 py-10 grid grid-cols-1 lg:grid-cols-3 gap-8">
                     <section className="lg:col-span-1 space-y-8">
-                        <div className="bg-white rounded-xl shadow-lg border border-emerald-200 p-6">
+                        <div className="bg-white rounded-xl shadow-lg border border-emerald-200 p-6 min-h-[550px]">
                             <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
                                 <Leaf className="w-6 h-6 text-emerald-600 mr-2" />
                                 Parcelas Vigentes
                             </h2>
                             <ParcelList parcels={parcels} onDelete={handleDeleteParcel} />
-                        </div>
-
-                        <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
-                            <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
-                                <Trash2 className="w-6 h-6 text-red-500 mr-2" />
-                                Parcelas Eliminadas
-                            </h2>
-                            <DeletedParcelList deletedParcels={deletedParcels} />
                         </div>
                     </section>
 
@@ -457,16 +449,16 @@ const DashboardParcels = () => {
                             </div>
                         </div>
 
-                        <div className="grid md:grid-cols-3 gap-8">
+                        <div className="grid md:grid-cols-2 gap-8">
                             <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 min-h-[300px] flex flex-col justify-between">
                                 <div className="flex justify-between items-center mb-2">
                                     <h3 className="text-lg font-semibold text-gray-900 flex items-center">
                                         <LucideLineChart className="w-5 h-5 text-red-500 mr-2" />
-                                        Histórico Temperatura
+                                        Temperatura
                                     </h3>
-                                    {/* <div className="text-xs text-gray-400">
-                                        {chartData.temperature.length} puntos en tiempo real
-                                    </div> */}
+                                    <div className="text-xs text-gray-400">
+                                        {chartData.temperature.length} datos en tiempo real
+                                    </div>
                                 </div>
                                 <div className="flex-1 flex items-center">
                                     <LineChartReal data={chartData.temperature} />
@@ -476,23 +468,14 @@ const DashboardParcels = () => {
                                 <div className="flex justify-between items-center mb-2">
                                     <h3 className="text-lg font-semibold text-gray-900 flex items-center">
                                         <BarChart3 className="w-5 h-5 text-blue-500 mr-2" />
-                                        Histórico Humedad
+                                        Humedad
                                     </h3>
-                                    {/* <div className="text-xs text-gray-400">
-                                        {chartData.humidity.length} puntos en tiempo real
-                                    </div> */}
+                                    <div className="text-xs text-gray-400">
+                                        {chartData.humidity.length} datos en tiempo real
+                                    </div>
                                 </div>
                                 <div className="flex-1 flex items-center">
                                     <BarChartReal data={chartData.humidity} />
-                                </div>
-                            </div>
-                            <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6 min-h-[300px] flex flex-col justify-between">
-                                <h3 className="text-lg font-semibold text-gray-900 mb-2 flex items-center">
-                                    <LucidePieChart className="w-5 h-5 text-indigo-500 mr-2" />
-                                    Distribución de Cultivos
-                                </h3>
-                                <div className="flex-1 flex items-center">
-                                    <PieChartReal data={cultivosDistribucion} />
                                 </div>
                             </div>
                         </div>

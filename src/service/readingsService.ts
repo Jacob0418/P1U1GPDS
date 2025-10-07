@@ -46,11 +46,19 @@ export const readingsService = {
     return fetchReadings("servicio-radiacion", "W/m²");
   },
   
-  // Nuevos servicios para datos históricos
+  // Servicios para datos históricos
   async getTemperatureHistorical() {
     return fetchReadings("servicio-temperatura-historico", "°C");
   },
   async getHumidityHistorical() {
     return fetchReadings("servicio-humedad-historico", "%");
+  },
+  
+  // Nuevos servicios para datos históricos
+  async getRainHistorical() {
+    return fetchReadings("servicio-lluvia-historico", "mm");
+  },
+  async getRadiationHistorical() {
+    return fetchReadings("servicio-radiacion-historico", "W/m²");
   },
 };

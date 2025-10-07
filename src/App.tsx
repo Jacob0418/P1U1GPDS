@@ -8,6 +8,7 @@ import DeletedParcelsPage from "./pages/DeletedParcelsPage";
 import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from '../src/components/auth/ProtectedRoute';
 import RegisterPage from "./pages/RegisterPage";
+import SensorHistorics from './pages/SensorHistorics';
 function App() {
   return (
     <AuthProvider>
@@ -19,7 +20,7 @@ function App() {
           <Route path="/deletedParcels" element={<ProtectedRoute><DeletedParcelsPage /></ProtectedRoute>} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<RegisterPage />} />
-
+          <Route path="/sensor-historics" element={<SensorHistorics />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

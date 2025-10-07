@@ -6,7 +6,9 @@ import {
     PieChart,
     LineChart,
     X,
-    Sprout
+    Sprout,
+    CloudRain,
+    Sun
 } from "lucide-react";
 import { NavLink } from "react-router-dom";
 
@@ -52,7 +54,10 @@ const SidebarComponent = ({ open, onClose }: SidebarProps) => {
                     <NavLink to="/dashboard/sensores" className={navLinkClass}>
                         <BarChart3 className="w-5 h-5 mr-2" /> Dashboard en Vivo
                     </NavLink>
-                    <NavLink to="/dashboard/historico" className={navLinkClass}>
+                    <NavLink to="/dashboard/historicos-sensores" className={navLinkClass}>
+                        <CloudRain className="w-5 h-5 mr-2" /> Históricos de Sensores
+                    </NavLink>
+                    {/* <NavLink to="/dashboard/historico" className={navLinkClass}>
                         <LineChart className="w-5 h-5 mr-2" /> Histórico Temperatura
                     </NavLink>
                     <NavLink to="/dashboard/humedad" className={navLinkClass}>
@@ -63,7 +68,7 @@ const SidebarComponent = ({ open, onClose }: SidebarProps) => {
                     </NavLink>
                     <NavLink to="/dashboard/mapa" className={navLinkClass}>
                         <MapPin className="w-5 h-5 mr-2" /> Mapa de Parcelas
-                    </NavLink>
+                    </NavLink> */}
                 </nav>
             </aside>
             <aside className="fixed top-0 left-0 z-50 hidden lg:flex flex-col h-screen w-64 bg-white border-r border-emerald-100 shadow-none">
@@ -81,10 +86,10 @@ const SidebarComponent = ({ open, onClose }: SidebarProps) => {
                     <NavLink to="/deletedParcels" className={navLinkClass}>
                         <Trash2 className="w-5 h-5 mr-2" /> Parcelas Eliminadas
                     </NavLink>
-                    {/* <NavLink to="/dashboard/sensores" className={navLinkClass}>
-                        <BarChart3 className="w-5 h-5 mr-2" /> Dashboard en Vivo
-                    </NavLink> */}
-                    <NavLink to="/dashboard/historico" className={navLinkClass}>
+                    <NavLink to="/sensor-historics" className={navLinkClass}>
+                        <CloudRain className="w-5 h-5 mr-2" /> Históricos de Sensores
+                    </NavLink>
+                    {/* <NavLink to="/dashboard/historico" className={navLinkClass}>
                         <LineChart className="w-5 h-5 mr-2" /> Histórico Temperatura
                     </NavLink>
                     <NavLink to="/dashboard/humedad" className={navLinkClass}>
@@ -95,7 +100,7 @@ const SidebarComponent = ({ open, onClose }: SidebarProps) => {
                     </NavLink>
                     <NavLink to="/dashboard/mapa" className={navLinkClass}>
                         <MapPin className="w-5 h-5 mr-2" /> Mapa de Parcelas
-                    </NavLink>
+                    </NavLink> */}
                 </nav>
             </aside>
         </>
