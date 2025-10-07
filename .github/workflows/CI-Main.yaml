@@ -61,11 +61,11 @@ jobs:
           echo "Creating Service to route traffic..."
           echo "Kubernetes resources applied successfully!"
 
-  deploy-to-render:
+  deploy-blue-green:
     needs: kubernetes-deploy
     runs-on: ubuntu-latest
     steps:
-      - name: Determine Deployment Target
+      - name: Determine Deployment Target Blue/Green
         id: deploy_target
         run: |
           # Verifica si el archivo .deploy_target existe
