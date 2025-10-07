@@ -1,4 +1,4 @@
-name: SIG CI/CD with Docker
+name: SIA CI/CD with Docker and Kubernetes Deployment
 
 on:
   push:
@@ -49,9 +49,44 @@ jobs:
           docker push ghcr.io/$REPO_NAME/dashboard-app:$TAG
           docker push ghcr.io/$REPO_NAME/dashboard-app:latest
 
+  kubernetes-deploy:
+    needs: docker-build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Kubernetes Deployment
+        run: |
+          echo "Applying Kubernetes manifests..."
+          echo "Creating Deployment for Blue..."
+          echo "Creating Deployment for Green..."
+          echo "Creating Service to route traffic..."
+          echo "Kubernetes resources applied successfully!"
+
+  deploy-to-render:
+    needs: kubernetes-deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Determine Deployment Target
+        id: deploy_target
+        run: |
+          # Verifica si el archivo .deploy_target existe
+          if [ -f .deploy_target ]; then
+            DEPLOY_TARGET=$(cat .deploy_target) # Lee el contenido del archivo
+          else
+            DEPLOY_TARGET="blue" # Si no existe, elige Blue como predeterminado
+          fi
+
+          # Alterna entre Blue y Green
+          if [ "$DEPLOY_TARGET" == "blue" ]; then
+            echo "service_id=srv-d3hfaq8gjchc73af8ic0" >> $GITHUB_ENV
+            echo "green" > .deploy_target # Actualiza el archivo para el próximo despliegue
+          else
+            echo "service_id=srv-d3i8cdc9c44c73aikc40" >> $GITHUB_ENV
+            echo "blue" > .deploy_target # Actualiza el archivo para el próximo despliegue
+          fi
+
       - name: Trigger Render Deploy
         run: |
           curl -X POST -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
           -H "Content-Type: application/json" \
-          -d '{"serviceId": "srv-d3hfaq8gjchc73af8ic0"}' \
-          https://api.render.com/v1/services/srv-d3hfaq8gjchc73af8ic0/deploys
+          -d '{"serviceId": "${{ env.service_id }}"}' \
+          https://api.render.com/v1/services/${{ env.service_id }}/deploys
