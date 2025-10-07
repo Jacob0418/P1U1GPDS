@@ -5,8 +5,10 @@ export interface SensorReading {
   ts: string;
 }
 
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL!;
-const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY!;
+// const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL!;
+// const SUPABASE_ANON_KEY = import.meta.env.VITE_SUPABASE_ANON_KEY!;
+const SUPABASE_URL = window.env?.VITE_SUPABASE_URL;
+const SUPABASE_ANON_KEY = window.env?.VITE_SUPABASE_ANON_KEY;
 
 async function fetchReadings(endpoint: string, defaultUnit: string): Promise<SensorReading[]> {
   try {
