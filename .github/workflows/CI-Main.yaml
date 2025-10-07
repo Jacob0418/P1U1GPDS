@@ -103,16 +103,15 @@ jobs:
             exit 1
           fi
 
-      - name: Debug .deploy_target location
-        run: |
-          # Imprime la ubicación actual y el contenido del directorio
-          echo "Directorio actual:"
-          pwd
-          echo "Archivos en el directorio actual:"
-          ls -la
-
       - name: Save Deployment Target
         uses: actions/upload-artifact@v4
         with:
           name: deploy-target
           path: .deploy_target
+
+      - name: Trigger Render Deploy
+        run: |
+          curl -X POST -H "Authorization: Bearer ${{ secrets.RENDER_API_KEY }}" \
+          -H "Content-Type: application/json" \
+          -d '{"serviceId": "${{ env.service_id }}"}' \
+          https://api.render.com/v1/services/${{ env.service_id }}/deploys
