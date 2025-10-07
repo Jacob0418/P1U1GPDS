@@ -91,6 +91,10 @@ jobs:
             echo "blue" > .deploy_target # Actualiza el archivo para el próximo despliegue
           fi
 
+          # Verifica que el archivo se haya creado correctamente
+          echo "Contenido de .deploy_target:"
+          cat .deploy_target
+
       - name: Save Deployment Target
         uses: actions/upload-artifact@v4
         with:
