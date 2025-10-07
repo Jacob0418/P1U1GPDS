@@ -95,6 +95,14 @@ jobs:
           echo "Contenido de .deploy_target:"
           cat .deploy_target
 
+      - name: Ensure .deploy_target exists
+        run: |
+          # Asegúrate de que el archivo esté en el directorio actual
+          if [ ! -f .deploy_target ]; then
+            echo "Error: .deploy_target no se encuentra en el directorio actual."
+            exit 1
+          fi
+
       - name: Save Deployment Target
         uses: actions/upload-artifact@v4
         with:
