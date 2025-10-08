@@ -343,7 +343,7 @@ const SensorHistorics = () => {
                             )}
                         </div>
                         <h1 className="text-3xl font-bold text-gray-900 mt-4">
-                            Históricos Completos de Sensores
+                            Históricos completos de sensores
                         </h1>
                         <p className="text-gray-600 mt-2">
                             Visualización paginada de todos los datos históricos de temperatura, humedad, lluvia y radiación solar
@@ -466,7 +466,7 @@ const SensorHistorics = () => {
                                     </div>
                                 </div>
                                 <div className="h-[150px] mb-3">
-                                    <LineChartReal data={chartData.temperature} />
+                                    <LineChartReal data={chartData.temperature} color="#ef4444" />
                                 </div>
                                 <PaginationControls sensorType="temperature" sensorName="Temperatura" />
                             </div>
@@ -483,12 +483,12 @@ const SensorHistorics = () => {
                                     </div>
                                 </div>
                                 <div className="h-[400px]">
-                                    <BarChartReal data={chartData.humidity} />
+                                    <BarChartReal data={chartData.humidity} color="#3b82f6" />
                                 </div>
                                 <PaginationControls sensorType="humidity" sensorName="Humedad" />
                             </div>
 
-                            {/* 3. Gráfica de Lluvia - Card compacto */}
+                            {/* 3. Gráfica de Lluvia - Card compacto con color morado/índigo */}
                             <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-4">
                                 <div className="flex justify-between items-center mb-3">
                                     <h2 className="text-lg font-semibold text-gray-900 flex items-center">
@@ -500,12 +500,12 @@ const SensorHistorics = () => {
                                     </div>
                                 </div>
                                 <div className="h-[150px] mb-3">
-                                    <LineChartReal data={chartData.rain} />
+                                    <LineChartReal data={chartData.rain} color="#6366f1" />
                                 </div>
                                 <PaginationControls sensorType="rain" sensorName="Lluvia" />
                             </div>
 
-                            {/* 4. Gráfica de Radiación Solar - Ancho completo */}
+                            {/* 4. Gráfica de Radiación Solar - Ancho completo con color amarillo */}
                             <div className="bg-white rounded-xl shadow-lg border border-gray-200 p-6">
                                 <div className="flex justify-between items-center mb-4">
                                     <h2 className="text-xl font-semibold text-gray-900 flex items-center">
@@ -517,7 +517,7 @@ const SensorHistorics = () => {
                                     </div>
                                 </div>
                                 <div className="h-[400px]">
-                                    <BarChartReal data={chartData.radiation} />
+                                    <BarChartReal data={chartData.radiation} color="#eab308" />
                                 </div>
                                 <PaginationControls sensorType="radiation" sensorName="Radiación" />
                             </div>

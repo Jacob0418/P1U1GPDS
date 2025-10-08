@@ -15,7 +15,7 @@ const DashboardHeader = ({ user, onLogout, onSidebarOpen }) => (
                     <MapPin className="w-8 h-8 text-white" />
                 </div>
                 <h1 className="text-2xl font-bold text-gray-900">
-                    Gestión de Parcelas
+                    Gestión de parcelas
                 </h1>
             </div>
             <div className="flex items-center space-x-4">
@@ -29,10 +29,10 @@ const DashboardHeader = ({ user, onLogout, onSidebarOpen }) => (
                     <LogOut className="w-4 h-4 mr-2" />
                     Salir
                 </button>
-                <button className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-6 py-2 rounded-lg hover:from-emerald-700 hover:to-teal-700 transition-all flex items-center cursor-pointer">
+                {/* <button className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-6 py-2 rounded-lg hover:from-emerald-700 hover:to-teal-700 transition-all flex items-center cursor-pointer">
                     <Plus className="w-5 h-5 mr-2" />
                     Nueva Parcela
-                </button>
+                </button> */}
             </div>
         </div>
     </header>
