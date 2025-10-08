@@ -39,7 +39,7 @@ const DashboardParcels = () => {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string>('');
     const [success, setSuccess] = useState<string>('');
-    
+
     // Estados para sensores en tiempo real
     const [sensorData, setSensorData] = useState<{
         temperature: SensorReading | null;
@@ -52,7 +52,7 @@ const DashboardParcels = () => {
         rain: null,
         radiation: null,
     });
-    
+
     // Nuevos estados para almacenar todos los datos y el índice actual
     const [allSensorData, setAllSensorData] = useState<{
         temperature: SensorReading[];
@@ -88,7 +88,7 @@ const DashboardParcels = () => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [sensorLoading, setSensorLoading] = useState(false);
     const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
-    
+
     const { signOut, user } = useAuth();
     const navigate = useNavigate();
 
@@ -146,10 +146,10 @@ const DashboardParcels = () => {
                 allSensorData.rain.length,
                 allSensorData.radiation.length
             );
-            
+
             // Generar índice aleatorio
             const randomIndex = getRandomIndex(maxLength);
-            
+
             // Actualizar los datos con el índice aleatorio
             const newSensorData = {
                 temperature: allSensorData.temperature.length > randomIndex ? allSensorData.temperature[randomIndex] : null,
@@ -170,52 +170,52 @@ const DashboardParcels = () => {
         if (historicalData.temperature.length > 0 && historicalData.humidity.length > 0) {
             // Definir cuántos puntos mostrar en la gráfica
             const windowSize = 8;
-            
+
             // Generar índices aleatorios para crear una ventana deslizante dinámica
             const tempIndices: number[] = [];
             const humidityIndices: number[] = [];
-            
+
             // Crear arrays de índices aleatorios para temperatura
             for (let i = 0; i < windowSize; i++) {
                 tempIndices.push(getRandomIndex(historicalData.temperature.length));
             }
-            
+
             // Crear arrays de índices aleatorios para humedad
             for (let i = 0; i < windowSize; i++) {
                 humidityIndices.push(getRandomIndex(historicalData.humidity.length));
             }
-            
+
             // Obtener los datos basados en los índices aleatorios
             const tempSelectedData = tempIndices.map((index, i) => ({
                 ...historicalData.temperature[index],
                 // Agregar un identificador secuencial para el eje X
                 displayIndex: i + 1
             }));
-            
+
             const humiditySelectedData = humidityIndices.map((index, i) => ({
                 ...historicalData.humidity[index],
                 // Agregar un identificador secuencial para el eje X
                 displayIndex: i + 1
             }));
-            
+
             // Convertir a formato de gráfica con índices secuenciales
             const newTempData = tempSelectedData.map((reading, index) => ({
                 timestamp: `T${index + 1}`, // Usar identificador simple para el eje X
                 value: reading.value,
                 originalTime: reading.ts // Mantener el timestamp original para tooltip
             }));
-            
+
             const newHumidityData = humiditySelectedData.map((reading, index) => ({
                 timestamp: `H${index + 1}`, // Usar identificador simple para el eje X
                 value: reading.value,
                 originalTime: reading.ts // Mantener el timestamp original para tooltip
             }));
-            
+
             setChartData({
                 temperature: newTempData,
                 humidity: newHumidityData
             });
-            
+
             console.log(`📊 Gráficas actualizadas - Temperatura: [${tempSelectedData.map(d => d.value.toFixed(1)).join(', ')}]`);
             console.log(`📊 Gráficas actualizadas - Humedad: [${humiditySelectedData.map(d => d.value.toFixed(1)).join(', ')}]`);
         }
@@ -224,7 +224,7 @@ const DashboardParcels = () => {
     // Función para actualizar los datos actuales basados en el índice (ahora también puede ser aleatorio)
     const updateCurrentSensorData = (allData: typeof allSensorData, index: number | null = null) => {
         let targetIndex = index;
-        
+
         // Si no se proporciona un índice, usar uno aleatorio
         if (targetIndex === null && allData.temperature.length > 0) {
             const maxLength = Math.max(
@@ -235,7 +235,7 @@ const DashboardParcels = () => {
             );
             targetIndex = getRandomIndex(maxLength);
         }
-        
+
         if (targetIndex !== null) {
             const newSensorData = {
                 temperature: allData.temperature.length > targetIndex ? allData.temperature[targetIndex] : null,
@@ -256,7 +256,7 @@ const DashboardParcels = () => {
         setSensorLoading(true);
         try {
             console.log('🔄 Cargando TODOS los datos de sensores...');
-            
+
             const [temperatureData, humidityData, rainData, radiationData, tempHistorical, humidityHistorical] = await Promise.all([
                 readingsService.getTemperatureReadings(),
                 readingsService.getHumidityReadings(),
@@ -290,13 +290,13 @@ const DashboardParcels = () => {
 
             setAllSensorData(newAllSensorData);
             setHistoricalData(newHistoricalData);
-            
+
             // Inicializar gráficas con los primeros 5 puntos
             setChartData({
                 temperature: convertToChartData(tempHistorical.slice(0, 5)),
                 humidity: convertToChartData(humidityHistorical.slice(0, 5))
             });
-            
+
             // Mostrar un elemento aleatorio inicialmente
             updateCurrentSensorData(newAllSensorData);
 
@@ -316,7 +316,7 @@ const DashboardParcels = () => {
     useEffect(() => {
         let rotateInterval: NodeJS.Timeout;
         let chartInterval: NodeJS.Timeout;
-        
+
         if (allSensorData.temperature.length > 0) {
             console.log('🚀 Iniciando rotación aleatoria cada 5 segundos');
             rotateInterval = setInterval(() => {
@@ -347,12 +347,13 @@ const DashboardParcels = () => {
 
     const loadParcels = async () => {
         setLoading(true);
-        const { data, error } = await ParcelService.getAllParcels();
+        // ✅ Usar el nuevo método específico para parcelas recientes
+        const { data, error } = await ParcelService.getRecentParcels(4);
         if (error) {
             setError('Error al cargar las parcelas');
             console.error(error);
         } else {
-            setParcels((data || []).slice(0, 2));
+            setParcels(data || []);
         }
         setLoading(false);
     };
@@ -373,9 +374,16 @@ const DashboardParcels = () => {
                         <div className="bg-white rounded-xl shadow-lg border border-emerald-200 p-6 min-h-[550px]">
                             <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
                                 <Leaf className="w-6 h-6 text-emerald-600 mr-2" />
-                                Parcelas Vigentes
+                                Parcelas Recientes
                             </h2>
                             <ParcelList parcels={parcels} onDelete={handleDeleteParcel} />
+                            
+                            {/* ✅ Agregar indicador de cantidad */}
+                            <div className="mt-4 pt-4 border-t border-gray-100">
+                                <p className="text-sm text-gray-500 text-center">
+                                    Mostrando las {parcels.length} parcelas más recientes
+                                </p>
+                            </div>
                         </div>
                     </section>
 
@@ -397,50 +405,50 @@ const DashboardParcels = () => {
                                     )}
                                 </div>
                             </div>
-                            
+
                             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                                 <div className="text-center p-4 bg-gradient-to-br from-red-50 to-orange-50 rounded-xl">
                                     <Thermometer className="w-8 h-8 mx-auto text-red-500 mb-2" />
-                                    
+
                                     <div className="text-2xl font-bold text-red-600">
-                                        {sensorData.temperature && typeof sensorData.temperature.value === 'number' ? 
-                                            `${sensorData.temperature.value.toFixed(1)}${sensorData.temperature.unit}` : 
+                                        {sensorData.temperature && typeof sensorData.temperature.value === 'number' ?
+                                            `${sensorData.temperature.value.toFixed(1)}${sensorData.temperature.unit}` :
                                             '--'
                                         }
                                     </div>
                                     <div className="text-sm text-gray-600">Temperatura</div>
                                 </div>
-                                
+
                                 <div className="text-center p-4 bg-gradient-to-br from-blue-50 to-cyan-50 rounded-xl">
                                     <Droplets className="w-8 h-8 mx-auto text-blue-500 mb-2" />
-                                    
+
                                     <div className="text-2xl font-bold text-blue-600">
-                                        {sensorData.humidity && typeof sensorData.humidity.value === 'number' ? 
-                                            `${sensorData.humidity.value.toFixed(1)}${sensorData.humidity.unit}` : 
+                                        {sensorData.humidity && typeof sensorData.humidity.value === 'number' ?
+                                            `${sensorData.humidity.value.toFixed(1)}${sensorData.humidity.unit}` :
                                             '--'
                                         }
                                     </div>
                                     <div className="text-sm text-gray-600">Humedad</div>
                                 </div>
-                                
+
                                 <div className="text-center p-4 bg-gradient-to-br from-indigo-50 to-blue-50 rounded-xl">
                                     <CloudRain className="w-8 h-8 mx-auto text-indigo-500 mb-2" />
-                                    
+
                                     <div className="text-2xl font-bold text-indigo-600">
-                                        {sensorData.rain && typeof sensorData.rain.value === 'number' ? 
-                                            `${sensorData.rain.value.toFixed(1)}${sensorData.rain.unit}` : 
+                                        {sensorData.rain && typeof sensorData.rain.value === 'number' ?
+                                            `${sensorData.rain.value.toFixed(1)}${sensorData.rain.unit}` :
                                             '--'
                                         }
                                     </div>
                                     <div className="text-sm text-gray-600">Lluvia</div>
                                 </div>
-                                
+
                                 <div className="text-center p-4 bg-gradient-to-br from-yellow-50 to-orange-50 rounded-xl">
                                     <Sun className="w-8 h-8 mx-auto text-yellow-500 mb-2" />
-                                    
+
                                     <div className="text-xl font-bold text-yellow-600">
-                                        {sensorData.radiation && typeof sensorData.radiation.value === 'number' ? 
-                                            `${sensorData.radiation.value.toFixed(0)}${sensorData.radiation.unit}` : 
+                                        {sensorData.radiation && typeof sensorData.radiation.value === 'number' ?
+                                            `${sensorData.radiation.value.toFixed(0)}${sensorData.radiation.unit}` :
                                             '--'
                                         }
                                     </div>
@@ -480,17 +488,18 @@ const DashboardParcels = () => {
                             </div>
                         </div>
 
-                        <div className="bg-white rounded-xl shadow-lg border border-emerald-200 p-6 min-h-[400px] flex flex-col justify-between">
-                            <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
-                                <MapPin className="w-6 h-6 text-green-600 mr-2" />
-                                Mapa de Parcelas Vigentes
-                            </h2>
-                            <div className="h-[350px]">
-                                <MapDemo />
-                            </div>
-                        </div>
+
                     </section>
                 </main>
+                <div className="bg-white rounded-xl shadow-lg border border-emerald-200 m-4 p-6 min-h-[400px] flex flex-col justify-between">
+                    <h2 className="text-xl font-bold text-gray-900 mb-4 flex items-center">
+                        <MapPin className="w-6 h-6 text-green-600 mr-2" />
+                        Mapa de Parcelas Vigentes
+                    </h2>
+                    <div className="h-[550px]">
+                        <MapDemo />
+                    </div>
+                </div>
             </div>
         </div>
     );

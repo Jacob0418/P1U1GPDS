@@ -137,7 +137,7 @@ const DeletedParcelsPage: React.FC = () => {
                   <Archive className="w-8 h-8 text-white" />
                 </div>
                 <div>
-                  <h1 className="text-2xl font-bold text-gray-900">Parcelas Eliminadas</h1>
+                  <h1 className="text-2xl font-bold text-gray-900">Parcelas eliminadas</h1>
                   <p className="text-sm text-red-600">{deletedParcels.length} parcelas en la papelera</p>
                 </div>
               </div>

@@ -97,8 +97,23 @@ export class ParcelService {
     }
   }
 
-  
- // Obtener todas las parcelas eliminadas
+  // ✅ Método específico para obtener parcelas recientes
+  static async getRecentParcels(limit: number = 4): Promise<{ data: Parcel[] | null; error: any }> {
+    try {
+      const { data, error } = await supabase
+        .from('parcels')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(limit) // Limitar directamente en la consulta
+
+      return { data, error }
+    } catch (error) {
+      console.error('Error fetching recent parcels:', error)
+      return { data: null, error }
+    }
+  }
+
+  // Obtener todas las parcelas eliminadas
   static async getDeletedParcels(): Promise<{ data: Parcel[] | null; error: any }> {
     try {
       const { data, error } = await supabase
