@@ -1,72 +1,51 @@
-import {
-    BarChart,
-    Bar,
-    XAxis,
-    YAxis,
-    CartesianGrid,
-    Tooltip,
-    ResponsiveContainer,
-} from "recharts";
-import type { SensorData } from "../../types/sensorData";
+import React from 'react';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
+import type { SensorData } from '../../types/sensorData';
 
 interface BarChartRealProps {
-    data: SensorData[];
+  data: SensorData[];
+  color?: string; // Nueva prop para color personalizado
 }
 
-const BarChartReal = ({ data }: BarChartRealProps) => {
-    // Formatear datos para la gráfica
-    const chartData = data.map((item) => ({
-        name: item.timestamp,
-        value: item.value,
-        originalTime: item.originalTime,
-    }));
-
-    return (
-        <div className="w-full h-full">
-            <ResponsiveContainer width="100%" height="100%">
-                <BarChart
-                    data={chartData}
-                    margin={{
-                        top: 5,
-                        right: 30,
-                        left: 20,
-                        bottom: 5,
-                    }}
-                >
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis
-                        dataKey="name"
-                        fontSize={12}
-                    />
-                    <YAxis
-                        fontSize={12}
-                        domain={[0, 100]} // Dominio fijo para humedad (0-100%)
-                    />
-                    <Tooltip
-                        formatter={(value: number) => [
-                            `${value.toFixed(1)}%`,
-                            "Humedad",
-                        ]}
-                        labelFormatter={(label, payload) => {
-                            if (payload && payload[0] && payload[0].payload.originalTime) {
-                                const date = new Date(payload[0].payload.originalTime);
-                                return `Tiempo: ${date.toLocaleTimeString()}`;
-                            }
-                            return `Punto: ${label}`;
-                        }}
-                    />
-                    <Bar
-                        dataKey="value"
-                        fill="#3B82F6"
-                        radius={[2, 2, 0, 0]}
-                        // Añadir animación suave
-                        animationDuration={1000}
-                        animationEasing="ease-in-out"
-                    />
-                </BarChart>
-            </ResponsiveContainer>
-        </div>
-    );
+const BarChartReal: React.FC<BarChartRealProps> = ({ data, color = "#8884d8" }) => {
+  return (
+    <ResponsiveContainer width="100%" height="100%">
+      <BarChart
+        data={data}
+        margin={{
+          top: 5,
+          right: 30,
+          left: 20,
+          bottom: 5,
+        }}
+      >
+        <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
+        <XAxis 
+          dataKey="timestamp" 
+          tick={{ fontSize: 12 }}
+          stroke="#666"
+        />
+        <YAxis 
+          tick={{ fontSize: 12 }}
+          stroke="#666"
+        />
+        <Tooltip 
+          contentStyle={{
+            backgroundColor: '#fff',
+            border: '1px solid #ccc',
+            borderRadius: '4px'
+          }}
+        />
+        {/* <Legend /> */}
+        <Bar 
+          dataKey="value" 
+          fill={color}
+          stroke={color}
+          strokeWidth={1}
+        />
+      </BarChart>
+    </ResponsiveContainer>
+  );
 };
 
 export default BarChartReal;

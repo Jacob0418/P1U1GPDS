@@ -9,15 +9,17 @@ import {
   User,
   Calendar,
   AlertCircle,
-  CheckCircle
+  CheckCircle,
+  TextAlignJustify
 } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
 import SidebarComponent from '../widgets/sidebar/sidebar'
 import { ParcelService } from '../service/parcelService'
 import type { Parcel, CreateParcelRequest, UpdateParcelRequest } from '../types/parcel'
+import DashboardHeader from '../components/dashboard/DashboardHeader'
+import { useNavigate } from 'react-router-dom'
 
 const ParcelsPage: React.FC = () => {
-  const { user } = useAuth()
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [parcels, setParcels] = useState<Parcel[]>([])
   const [loading, setLoading] = useState(true)
@@ -36,6 +38,18 @@ const ParcelsPage: React.FC = () => {
     crop: ''
   })
 
+  const { signOut, user } = useAuth();
+    const navigate = useNavigate();
+
+  const handleLogout = async () => {
+        try {
+            await signOut();
+            navigate('/');
+        } catch (error) {
+            console.error('Error al cerrar sesión:', error);
+        }
+    };
+  
   useEffect(() => {
     loadParcels()
   }, [])
@@ -167,7 +181,12 @@ const ParcelsPage: React.FC = () => {
 
       <div className="flex-1 lg:ml-64">
         {/* Header */}
-        <header className="bg-white/80 backdrop-blur-lg border-b border-emerald-200 sticky top-0 z-40">
+        <DashboardHeader
+                    user={user}
+                    onLogout={handleLogout}
+                    onSidebarOpen={() => setSidebarOpen(true)}
+                />
+        {/* <header className="bg-white/80 backdrop-blur-lg border-b border-emerald-200 sticky top-0 z-40">
           <div className="max-w-7xl mx-auto px-4 py-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-3">
@@ -188,7 +207,7 @@ const ParcelsPage: React.FC = () => {
               </button>
             </div>
           </div>
-        </header>
+        </header> */}
 
         {/* Alerts */}
         {error && (
@@ -211,6 +230,29 @@ const ParcelsPage: React.FC = () => {
 
         {/* Main Content */}
         <main className="max-w-7xl mx-auto px-4 py-8">
+          {/* Header de la página con título y botón */}
+          <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center space-x-4">
+              <div className="bg-gradient-to-br from-emerald-500 to-teal-600 p-3 rounded-xl">
+                {/* <MapPin className="w-8 h-8 text-white" /> */}
+                <TextAlignJustify className="w-8 h-8 text-white"  />
+              </div>
+              <div>
+                <h1 className="text-3xl font-bold text-gray-900">Lista de parcelas</h1>
+                <p className="text-emerald-600 font-medium mt-1">
+                  {parcels.length} {parcels.length === 1 ? 'parcela registrada' : 'parcelas registradas'}
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => setShowCreateModal(true)}
+              className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-6 py-3 rounded-xl hover:from-emerald-700 hover:to-teal-700 transition-all flex items-center shadow-lg hover:shadow-xl transform hover:scale-105 cursor-pointer"
+            >
+              <Plus className="w-5 h-5 mr-2" />
+              Nueva Parcela
+            </button>
+          </div>
+
           {/* Search Bar */}
           <div className="mb-8">
             <div className="relative">
@@ -234,7 +276,14 @@ const ParcelsPage: React.FC = () => {
             <div className="text-center py-12">
               <MapPin className="w-16 h-16 text-gray-300 mx-auto mb-4" />
               <h3 className="text-xl font-semibold text-gray-600 mb-2">No hay parcelas</h3>
-              <p className="text-gray-500">Comienza creando tu primera parcela</p>
+              <p className="text-gray-500 mb-6">Comienza creando tu primera parcela</p>
+              <button
+                onClick={() => setShowCreateModal(true)}
+                className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-8 py-3 rounded-xl hover:from-emerald-700 hover:to-teal-700 transition-all flex items-center mx-auto shadow-lg hover:shadow-xl transform hover:scale-105 cursor-pointer"
+              >
+                <Plus className="w-5 h-5 mr-2" />
+                Crear Primera Parcela
+              </button>
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -295,8 +344,8 @@ const ParcelsPage: React.FC = () => {
 
       {/* Create Modal */}
       {showCreateModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-2xl w-full max-w-md">
+        <div className="fixed inset-0 bg-gray-500/30 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl shadow-2xl w-full max-w-md border border-gray-200">
             <div className="p-6">
               <h2 className="text-2xl font-bold text-gray-900 mb-6">Nueva Parcela</h2>
               <form onSubmit={handleCreateParcel} className="space-y-4">
@@ -379,8 +428,8 @@ const ParcelsPage: React.FC = () => {
 
       {/* Edit Modal */}
       {showEditModal && selectedParcel && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-2xl w-full max-w-md">
+        <div className="fixed inset-0 bg-gray-500/30 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-xl shadow-2xl w-full max-w-md border border-gray-200">
             <div className="p-6">
               <h2 className="text-2xl font-bold text-gray-900 mb-6">Editar Parcela</h2>
               <form onSubmit={handleUpdateParcel} className="space-y-4">
