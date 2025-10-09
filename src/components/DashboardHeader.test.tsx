@@ -10,6 +10,6 @@ describe('DashboardHeader', () => {
 
   it('renders the title', () => {
     render(<DashboardHeader user={{ email: 'test@example.com' }} onLogout={() => {}} onSidebarOpen={() => {}} />);
-    expect(screen.getByText('Gestión de Parcelas')).toBeInTheDocument();
+    expect(screen.getByText('Gestión de parcelas')).toBeInTheDocument();
   });
 });
