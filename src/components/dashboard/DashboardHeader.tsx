@@ -15,7 +15,7 @@ const DashboardHeader = ({ user, onLogout, onSidebarOpen }) => (
                     <MapPin className="w-8 h-8 text-white" />
                 </div>
                 <h1 className="text-2xl font-bold text-gray-900">
-                    Gestión de parcelas
+                    Gestión de Parcelas
                 </h1>
             </div>
             <div className="flex items-center space-x-4">
