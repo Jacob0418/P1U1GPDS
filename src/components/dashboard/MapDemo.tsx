@@ -47,7 +47,8 @@ const PAGINATION_OPTIONS = [
     { label: "Todos", value: 10000 }
 ];
 
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL!;
+// const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL!;
+const SUPABASE_URL = window.env?.VITE_SUPABASE_URL;
 
 const MapDemo = () => {
     // Estados para datos completos (10,000 registros cada uno)
