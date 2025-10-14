@@ -25,6 +25,7 @@ import BarChartReal from "../components/dashboard/BarChartReal";
 import PieChartReal from "../components/dashboard/PieChartReal";
 import MapDemo from "../components/dashboard/MapDemo";
 import type { PieChartData, SensorData } from "../types/sensorData";
+import Swal from 'sweetalert2';
 
 const cultivosDistribucion: PieChartData[] = [
     { crop: "Maíz", value: 40 },
@@ -93,7 +94,17 @@ const DashboardParcels = () => {
     const navigate = useNavigate();
 
     const handleDeleteParcel = async (id: string) => {
-        if (!confirm('¿Estás seguro de que deseas eliminar esta parcela?')) return;
+        const result = await Swal.fire({
+            title: '¿Estás seguro?',
+            text: '¿Deseas eliminar esta parcela?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar',
+        });
+
+        if (!result.isConfirmed) return;
+
         const { error } = await ParcelService.deleteParcel(id);
         if (error) {
             setError('Error al eliminar la parcela');

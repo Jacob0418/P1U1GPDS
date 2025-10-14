@@ -16,6 +16,7 @@ import SidebarComponent from '../widgets/sidebar/sidebar'
 import DashboardHeader from '../components/dashboard/DashboardHeader'
 import { ParcelService } from '../service/parcelService'
 import type { Parcel } from '../types/parcel'
+import Swal from 'sweetalert2';
 
 const DeletedParcelsPage: React.FC = () => {
   const { user, signOut } = useAuth()
@@ -84,13 +85,22 @@ const DeletedParcelsPage: React.FC = () => {
   }
 
   const handlePermanentDelete = async (id: string) => {
-    if (!confirm('¿Estás seguro de que quieres eliminar definitivamente esta parcela? Esta acción no se puede deshacer.')) return
-    
+    const result = await Swal.fire({
+      title: '¿Estás seguro?',
+      text: '¿Quieres eliminar definitivamente esta parcela? Esta acción no se puede deshacer.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+    })
+
+    if (!result.isConfirmed) return
+
     setError('')
     setSuccess('')
 
     const { error } = await ParcelService.permanentlyDeleteParcel(id)
-    
+
     if (error) {
       setError('Error al eliminar la parcela permanentemente')
       console.error(error)

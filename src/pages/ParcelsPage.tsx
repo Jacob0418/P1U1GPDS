@@ -18,6 +18,7 @@ import { ParcelService } from '../service/parcelService'
 import type { Parcel, CreateParcelRequest, UpdateParcelRequest } from '../types/parcel'
 import DashboardHeader from '../components/dashboard/DashboardHeader'
 import { useNavigate } from 'react-router-dom'
+import Swal from 'sweetalert2';
 
 const ParcelsPage: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false)
@@ -139,20 +140,29 @@ const ParcelsPage: React.FC = () => {
     }
   }
 
-  const handleDeleteParcel = async (id: string) => {
-    console.log('Deleting parcel with id:', id)
-    if (!confirm('¿Estás seguro de que deseas eliminar esta parcela?')) return
+const handleDeleteParcel = async (id: string) => {
+  console.log('Deleting parcel with id:', id)
+  const result = await Swal.fire({
+    title: '¿Estás seguro?',
+    text: '¿Deseas eliminar esta parcela?',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Sí, eliminar',
+    cancelButtonText: 'Cancelar',
+  })
 
-    const { error } = await ParcelService.deleteParcel(id)
+  if (!result.isConfirmed) return
 
-    if (error) {
-      setError('Error al eliminar la parcela')
-      console.error(error)
-    } else {
-      setSuccess('Parcela eliminada exitosamente')
-      loadParcels()
-    }
+  const { error } = await ParcelService.deleteParcel(id)
+
+  if (error) {
+    setError('Error al eliminar la parcela')
+    console.error(error)
+  } else {
+    setSuccess('Parcela eliminada exitosamente')
+    loadParcels()
   }
+}
 
   const openEditModal = (parcel: Parcel) => {
     setSelectedParcel(parcel)
