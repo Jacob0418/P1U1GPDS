@@ -1,8 +1,11 @@
 import { useState, useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import MarkerClusterGroup from 'react-leaflet-markercluster';
 import { Thermometer, Droplets, CloudRain, Sun, Loader, Eye, EyeOff, ChevronDown } from "lucide-react";
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
+import 'leaflet.markercluster/dist/MarkerCluster.css';
+import 'leaflet.markercluster/dist/MarkerCluster.Default.css';
 
 import markerIcon from 'leaflet/dist/images/marker-icon.png';
 import markerShadow from 'leaflet/dist/images/marker-shadow.png';
@@ -570,65 +573,75 @@ const MapDemo = () => {
                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
                 
-                {visibleSensors.map((reading, idx) => (
-                    <Marker 
-                        key={`${reading.type}-${idx}`} 
-                        position={[reading.location.lat, reading.location.lon]}
-                    >
-                        <Popup>
-                            <div className="p-3 min-w-[200px]">
-                                <div className="flex items-center space-x-2 mb-3">
-                                    {getSensorIcon(reading.type)}
-                                    <strong className="text-lg">Sensor de {getSensorName(reading.type)}</strong>
-                                </div>
-                                
-                                <div className="space-y-2 text-sm">
-                                    <div className="flex justify-between">
-                                        <span className="text-gray-600">Valor:</span>
-                                        <span 
-                                            className="font-bold text-lg"
-                                            style={{ color: getSensorColor(reading) }}
-                                        >
-                                            {reading.value} {reading.unit}
-                                        </span>
+                <MarkerClusterGroup
+                    showCoverageOnHover={false}
+                    zoomToBoundsOnClick={true}
+                    spiderfyOnMaxZoom={true}
+                    removeOutsideVisibleBounds={true}
+                    animate={true}
+                    maxClusterRadius={60}
+                    chunkedLoading={true}
+                >
+                    {visibleSensors.map((reading, idx) => (
+                        <Marker 
+                            key={`${reading.type}-${idx}`} 
+                            position={[reading.location.lat, reading.location.lon]}
+                        >
+                            <Popup>
+                                <div className="p-3 min-w-[200px]">
+                                    <div className="flex items-center space-x-2 mb-3">
+                                        {getSensorIcon(reading.type)}
+                                        <strong className="text-lg">Sensor de {getSensorName(reading.type)}</strong>
                                     </div>
                                     
-                                    <div className="flex justify-between">
-                                        <span className="text-gray-600">Tipo:</span>
-                                        <span className="font-medium capitalize">
+                                    <div className="space-y-2 text-sm">
+                                        <div className="flex justify-between">
+                                            <span className="text-gray-600">Valor:</span>
+                                            <span 
+                                                className="font-bold text-lg"
+                                                style={{ color: getSensorColor(reading) }}
+                                            >
+                                                {reading.value} {reading.unit}
+                                            </span>
+                                        </div>
+                                        
+                                        <div className="flex justify-between">
+                                            <span className="text-gray-600">Tipo:</span>
+                                            <span className="font-medium capitalize">
+                                                {getSensorName(reading.type)}
+                                            </span>
+                                        </div>
+                                        
+                                        <div className="flex justify-between">
+                                            <span className="text-gray-600">Coordenadas:</span>
+                                            <span className="font-mono text-xs">
+                                                {reading.location.lat.toFixed(6)}, {reading.location.lon.toFixed(6)}
+                                            </span>
+                                        </div>
+                                        
+                                        <div className="flex justify-between">
+                                            <span className="text-gray-600">Última lectura:</span>
+                                            <span className="text-xs">
+                                                {formatDate(reading.ts)}
+                                            </span>
+                                        </div>
+                                    </div>
+                                    
+                                    {/* Indicador visual */}
+                                    <div className="mt-3 flex items-center space-x-2">
+                                        <div 
+                                            className="w-4 h-4 rounded-full border-2 border-white shadow-sm"
+                                            style={{ backgroundColor: getSensorColor(reading) }}
+                                        ></div>
+                                        <span className="text-xs text-gray-500">
                                             {getSensorName(reading.type)}
                                         </span>
                                     </div>
-                                    
-                                    <div className="flex justify-between">
-                                        <span className="text-gray-600">Coordenadas:</span>
-                                        <span className="font-mono text-xs">
-                                            {reading.location.lat.toFixed(6)}, {reading.location.lon.toFixed(6)}
-                                        </span>
-                                    </div>
-                                    
-                                    <div className="flex justify-between">
-                                        <span className="text-gray-600">Última lectura:</span>
-                                        <span className="text-xs">
-                                            {formatDate(reading.ts)}
-                                        </span>
-                                    </div>
                                 </div>
-                                
-                                {/* Indicador visual */}
-                                <div className="mt-3 flex items-center space-x-2">
-                                    <div 
-                                        className="w-4 h-4 rounded-full border-2 border-white shadow-sm"
-                                        style={{ backgroundColor: getSensorColor(reading) }}
-                                    ></div>
-                                    <span className="text-xs text-gray-500">
-                                        {getSensorName(reading.type)}
-                                    </span>
-                                </div>
-                            </div>
-                        </Popup>
-                    </Marker>
-                ))}
+                            </Popup>
+                        </Marker>
+                    ))}
+                </MarkerClusterGroup>
             </MapContainer>
         </div>
     );
